@@ -19,18 +19,17 @@ Done.  New promotions are still in inbox so you can conveniently search for that
 1. Go to Tools -> Script Editor...
 1. Copy and paste the Code.gs text into the script. 
 1. Save it
-1. First run the *initSheets* function by selecting it in the "Select Fuction" dropdown and presssing the run button.
+1. First run the **`initSheets`** function by selecting it in the "Select Fuction" dropdown and presssing the run button.
 1. The script will ask for permission to run against your google account and the various data.  This script does not export the information anywhere or provide access to any other account.  It is completely limited to this script and your account.  Review the code and permissions if you have concerns.
 1. Go back to the sheet and open the Settings sheet.  Make sure the default "delete me label"
 matches the label you setup above.  Add an email if you want details, daily reports.
 
 # Testing
-1. Select the cleanupTest function where is says "Select Fuction" and press the run button.
-
+1. Select the **`cleanupTest`** function where is says "Select Fuction" and press the run button.
 1. Once the script has run, go back the sheet and select the "Data" sheet.  You will see a new row with today's date and some stats about the number of threads deleted.  If you see some other text, then something went wrong.  Check your setup to make sure it is OK.
 1. If the script ran properly, now you can schedule the actual cleanup task.  First, clean up the data by deleting the row just entered.  You will also need to change the "Current Row" setting in the Settings sheet so the real data starts in the right place.
-1. OR, you can delete the Data sheet and run the *initSheets* function again.
-1. In the script editor, click the little clock icon or choose Resources -> Current project's triggers menu item.  In the dialog, add a new trigger to run "cleanup" and select whatever time based trigger you want.  Daily should work.
+1. OR, you can delete the Data sheet and run the **`initSheets`** function again.
+1. In the script editor, click the little clock icon or choose Resources -> Current project's triggers menu item.  In the dialog, add a new trigger to run **`cleanup`** and select whatever time based trigger you want.  Daily should work.
 
 # Notes
 

@@ -1,4 +1,5 @@
 var SettingsSheet = "Settings";
+var DetailsSheet = "Details";
 
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
@@ -155,10 +156,14 @@ function logSenders(fromMap, messages) {
 function readDetails() {
   
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName("Details");
+  var sheet = ss.getSheetByName(DetailsSheet);
   
   var d = new Date();
   var ret = {date:d.toDateString(), fromMap : {}};
+  
+  if (!sheet) {
+    return ret;
+  }
   
   var lastDate = sheet.getRange(1,1).getValue();
   
@@ -184,9 +189,14 @@ function readDetails() {
 //////////////////////////////////////////////////////////////////
 function writeDetails(details) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName("Details");
-  sheet.clearContents();
-
+  var sheet = ss.getSheetByName(DetailsSheet);
+  
+  if (!sheet) {
+    sheet = ss.insertSheet(DetailsSheet);
+  } else {
+    sheet.clear();
+  }
+  
   sheet.getRange(1, 1).setValue(details.date);
   
   var dataRow = 2;

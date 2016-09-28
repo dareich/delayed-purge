@@ -1,5 +1,92 @@
 var SettingsSheet = "Settings";
 var DetailsSheet = "Details";
+var DataSheet = "Data";
+
+//////////////////////////////////////////////////////////////////
+// Run this to setup the sheets
+//////////////////////////////////////////////////////////////////
+function initSheets() {
+  setupData();
+  setupSettings();
+}
+
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+function createSheet(sheetName) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName(sheetName);
+  
+  if (!sheet) {
+    return ss.insertSheet(sheetName);  
+  }
+  
+  return null;
+}
+
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+function setupData() {
+  
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName("Sheet1");
+  
+  if (!sheet) {
+    sheet = createSheet(DataSheet);
+  } else {
+    sheet.setName(DataSheet);
+  }
+  
+  if (!sheet) {
+    return;    
+  }
+  
+  var headerValues = [
+      ["Date",	"Total Delayed Threads", "Deleted Threads", "Deleted Messages", "Time (sec)", "Passes"]
+    ];
+
+  var wraps = [
+   [ true, true, true, true, true, true ]
+  ];
+  
+  var range = sheet.getRange("A1:F1");
+  range.setValues(headerValues);
+  range.setWraps(wraps);
+  
+}
+
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+function setupSettings() {
+  var sheet = createSheet(SettingsSheet);
+  
+  if (!sheet) {
+    return;    
+  }
+  
+  sheet.setColumnWidth(3,450);
+  
+  var values = [
+      ["Current Row", 2, "Indicates which row in the Data sheet is going to be updated on the next run.  This should point to the last non-blank row.  The script will update that row if it runs on the same day.  If the script runs on a different day, it will automatically move to the next row."],
+      ["Delay to Delete", 15, "Threads older (in days) than this in the delete me label are moved to trash"],
+      ["Delete me Label", "delete me", "Name of the delete me label.  If the label is sub label, then this is the full name.  e.g.  Parent/DeleteMe"],
+      ["Report Email", "", "Email where the cleanup report is sent.  Leave blank to turn off emails."],
+    ];
+  
+  var wraps = [
+   [ false, false, true ],
+   [ false, false, true ],
+   [ false, false, true ],
+   [ false, false, true ],
+  ];
+
+  var range = sheet.getRange("A1:C4").setValues(values);
+  range.setValues(values);
+  range.setWraps(wraps);
+  
+  range = sheet.getRange("A2:B3").setFontColor("#ff0000");
+  
+}
+
 
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
@@ -75,7 +162,7 @@ function isRowToUse(today, range) {
 //////////////////////////////////////////////////////////////////
 function writeInfo(info) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName("Data");
+  var sheet = ss.getSheetByName(DataSheet);
 
   var d = new Date();
 
@@ -116,7 +203,7 @@ function writeInfo(info) {
 //////////////////////////////////////////////////////////////////
 function writeError(error) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName("Data");
+  var sheet = ss.getSheetByName(DataSheet);
 
   var d = new Date();
 

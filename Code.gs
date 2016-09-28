@@ -51,7 +51,45 @@ function setupData() {
   var range = sheet.getRange("A1:F1");
   range.setValues(headerValues);
   range.setWraps(wraps);
+    
+  addAreaChart(sheet);
+  addTimeVsMessagesChart(sheet);
   
+}
+
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+function addAreaChart(sheet) {
+    
+  var chart = sheet.newChart()
+     .setChartType(Charts.ChartType.AREA)
+     .addRange(sheet.getRange("A1:C365"))
+     .setPosition(1, 7, 0, 0)
+     .setOption('height', 600)
+     .setOption('width', 900)
+     .setOption('isStacked', true)
+     .setOption('legend', {position: 'top'})
+     .build();
+
+  sheet.insertChart(chart);
+}
+
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+function addTimeVsMessagesChart(sheet) {
+    
+  var chart = sheet.newChart()
+     .setChartType(Charts.ChartType.SCATTER)
+     .addRange(sheet.getRange("C1:C365"))
+     .addRange(sheet.getRange("E1:E365"))
+     .setPosition(32, 7, 0, 0)
+  .setOption('hAxis',{title : 'Number of deleted threads'})
+  .setOption('vAxis',{title : 'Time (sec)'})
+  .setOption('legend',{position : 'none'})
+  .setOption('trendlines',  { 0: {type:'linear', label:'none'} })
+     .build();
+
+  sheet.insertChart(chart);
 }
 
 //////////////////////////////////////////////////////////////////

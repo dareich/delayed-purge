@@ -41,16 +41,23 @@ function setupData() {
   }
   
   var headerValues = [
-      ["Date",	"Total Delayed Threads", "Deleted Threads", "Deleted Messages", "Time (sec)", "Passes"]
+      ["Current Row", 4, "Points to the last non-blank row.  The script will update that row if it runs on the same day.  If the script runs on a different day, it will automatically move to the next row.","","",""],
+      ["","","","","",""],
+      ["Date",	"Total Delayed Threads", "Deleted Threads", "Deleted Messages", "Time (sec)", "Passes"],
     ];
 
   var wraps = [
-   [ true, true, true, true, true, true ]
+   [ false, false, false, false, false, false ],
+   [ false, false, false, false, false, false ],
+   [ true, true, true, true, true, true ],
   ];
   
-  var range = sheet.getRange("A1:F1");
+  var range = sheet.getRange("A1:F3");
   range.setValues(headerValues);
   range.setWraps(wraps);
+  
+  // De-emphsize the current row tracking
+  sheet.getRange("A1:C1").setFontColor("#888888");
     
   addAreaChart(sheet);
   addTimeVsMessagesChart(sheet);
@@ -63,7 +70,7 @@ function addAreaChart(sheet) {
     
   var chart = sheet.newChart()
      .setChartType(Charts.ChartType.AREA)
-     .addRange(sheet.getRange("A1:C365"))
+     .addRange(sheet.getRange("A3:C365"))
      .setPosition(1, 7, 0, 0)
      .setOption('height', 600)
      .setOption('width', 900)
@@ -80,8 +87,8 @@ function addTimeVsMessagesChart(sheet) {
     
   var chart = sheet.newChart()
      .setChartType(Charts.ChartType.SCATTER)
-     .addRange(sheet.getRange("C1:C365"))
-     .addRange(sheet.getRange("E1:E365"))
+     .addRange(sheet.getRange("C3:C365"))
+     .addRange(sheet.getRange("E3:E365"))
      .setPosition(32, 7, 0, 0)
   .setOption('hAxis',{title : 'Number of deleted threads'})
   .setOption('vAxis',{title : 'Time (sec)'})
@@ -104,7 +111,7 @@ function setupSettings() {
   sheet.setColumnWidth(3,450);
   
   var values = [
-      ["Current Row", 2, "Indicates which row in the Data sheet is going to be updated on the next run.  This should point to the last non-blank row.  The script will update that row if it runs on the same day.  If the script runs on a different day, it will automatically move to the next row."],
+      ["Setting", "Value", "Description"],
       ["Delay to Delete", 15, "Threads older (in days) than this in the delete me label are moved to trash"],
       ["Delete me Label", "delete me", "Name of the delete me label.  If the label is sub label, then this is the full name.  e.g.  Parent/DeleteMe"],
       ["Report Email", "", "Email where the cleanup report is sent.  Leave blank to turn off emails."],
@@ -121,7 +128,8 @@ function setupSettings() {
   range.setValues(values);
   range.setWraps(wraps);
   
-  range = sheet.getRange("A2:B3").setFontColor("#ff0000");
+  sheet.getRange("A2:B3").setFontColor("#ff0000");
+  sheet.getRange("A1:C1").setFontWeight("bold");
   
 }
 
@@ -130,7 +138,7 @@ function setupSettings() {
 //////////////////////////////////////////////////////////////////
 function getCurrentRowCell() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName(SettingsSheet);
+  var sheet = ss.getSheetByName(DataSheet);
   
   return sheet.getRange(1, 2);
 }
@@ -394,6 +402,7 @@ function cleanup() {
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
 function cleanupMail(moveToTrash) {
+  setupData();
   var start = new Date();
   
   var delayDays = getDelay();

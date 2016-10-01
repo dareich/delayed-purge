@@ -25,10 +25,12 @@ Done.  New promotions are still in inbox so you can conveniently search for that
 matches the label you setup above.  Add an email if you want details, daily reports.
 
 # Testing
-1. Select the **`cleanupTest`** function where is says "Select Fuction" and press the run button.
+1. Select the **`cleanupTest`** function where it says "Select Fuction" and press the run button.
 1. Once the script has run, go back the sheet and select the "Data" sheet.  You will see a new row with today's date and some stats about the number of threads deleted.  If you see some other text, then something went wrong.  Check your setup to make sure it is OK.
-1. If the script ran properly, now you can schedule the actual cleanup task.  First, clean up the data by deleting the row just entered.  You will also need to change the "Current Row" setting in the Settings sheet so the real data starts in the right place.
-1. OR, you can delete the Data sheet and run the **`initSheets`** function again.
+1. If the script ran properly, now you can schedule the actual cleanup task.  
+ 1. First, clean up the test data
+  1. Delete the row just entered.  You also need to change the "Current Row" value at the top of the "Data" sheet so the real data starts in the right place.
+  1. **OR**, you can delete the Data sheet.  The **`cleanup`** function automatically creates a new sheet when it runs.
 1. In the script editor, click the little clock icon or choose Resources -> Current project's triggers menu item.  In the dialog, add a new trigger to run **`cleanup`** and select whatever time based trigger you want.  Daily should work.
 
 # Notes

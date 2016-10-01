@@ -13,8 +13,10 @@ function onOpen() {
   
   var menuItems = [];
   
-  if (ss.getSheetByName(SettingsSheet)) {
-    menuItems.push({name: 'Settings...', functionName: 'showSettings'})
+  if (isSettingsPreset) {
+    menuItems.push({name: 'Settings...', functionName: 'showSettings'});
+    menuItems.push({name: 'Purge Now', functionName: 'cleanup'})
+    menuItems.push({name: 'Test', functionName: 'cleanupTest'})
   }
   if (!isSettingsPreset || !isDataPreset) {
     menuItems.push({name: 'Setup Sheets', functionName: 'initSheets'});

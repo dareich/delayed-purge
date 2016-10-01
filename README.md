@@ -21,18 +21,23 @@ Done.  New promotions are still in inbox so you can conveniently search for that
 1. Go to Tools -> Script Editor...
 1. Copy and paste the Code.gs text into the script. 
 1. Save it
-1. Go back to the sheet and hit the refresh button.  After a few seconds, you will see a nice "Delay Purge" menu show up.
+1. Go back to the sheet and hit the refresh button.  
+1. After a few seconds, you will see a nice **"Delay Purge"** menu show up.
 1. Open that menu and select the "Setup Sheets" item.  This will add the sheets the script uses to track its important work and "Settings" sheet where you control its behavior.
 1. The script will ask for permission to run against your google account and the various data.  This script does not export the information anywhere or provide access to any other account.  It is completely limited to this script and your account.  Review the code and permissions if you have concerns.
 1. The "Settings" sheet should be the curent active sheet, but if not, you and either select from the tabs at the botton of the screen, or use the "delay Purge -> Settings" menu to activate it.
 1. Make sure the default "delete me label" matches the label you setup above.  Add an email if you want detailed, daily reports.
 
-# Testing
-1. Open the script editor again.
-1. Select the **`cleanupTest`** function where it says "Select Fuction" and press the run button.
-1. Once the script has run, go back the sheet and select the "TestData" sheet.  You will see a new row with today's date and some stats about the number of threads deleted.  If you see some other text, then something went wrong.  Check your setup to make sure it is OK.
+# Testing and Scheduling
+1. Under the **"Delay Purge"** menu select "Test"
+1. Once the script has run, select the "TestData" sheet.  You will see a new row with today's date and some stats about the number of threads deleted.  If you see some other text, then something went wrong.  Check your setup to make sure it is OK.
 1. If the script ran properly, now you can schedule the actual cleanup task. *Feel free to delete the "TestData" sheet.*
-1. In the script editor, click the little clock icon or choose Resources -> Current project's triggers menu item.  In the dialog, add a new trigger to run **`cleanup`** and select whatever time based trigger you want.  Daily should work.
+1. In the script editor, click the little clock icon or choose Resources -> Current project's triggers menu item.  
+ - In the dialog, add a new trigger to run **`cleanup`** and select whatever time based trigger you want. 
+
+Running the script daily should be sufficient to keep your junk down, but you can run this as many times per day as you want. The stats accumulate on the single line for the day, so running the script often does not spam the data table.
+
+You can also run the script by selecting the "Purge Now" menu under **"Delay Purge"**.  You might want to do that when first setting this up if you are like me and have thousands of junk emails built up.
 
 # Notes
 

@@ -2,9 +2,11 @@
 Google sheet script that purges mail after a delay and keeps track in a spreadsheet.
 
 # Overview
-Add this script to a google spreadsheet to move emails in your GMail from a "delete me" label to trash once they have reached a certain age.  Configure the script to execute on a schedule and edit the settings right in the spreadsheet.
+Do you suffer from a build up of occaisionally useful junk emails?  You don't want to delete that Shutterfly deal that expires in 4 days immediately, but in 4 days, you will probably forget to get rid of the thing.  Sadly, in no time at all, you are looking at a huge unread count in your inbox.  
 
-This is perfect for automatically cleaning out those promotional emails that are occaisionally handy.  You don't want to delete that Shuuterfly deal that expires in 4 days immediately, but in 4 days, you will probably forget to get rid of the thing.
+This script is perfect for automatically cleaning up that junk.  
+
+Add this script to a google spreadsheet to move emails in your GMail from a "delete me" label to trash once they have reached a certain age.  Configure the script to execute on a schedule and edit the settings right in the spreadsheet.
 
 For data/dashboard geeks, the script logs the number of threads and messages removed right in the spreadsheet and the data is displayed in a nice chart.  You can see how much crap the script is purging on a daily basis.  There is also a correlation showing the time to delete vs. the number of threads.  Total Shiggles.
 
@@ -19,12 +21,14 @@ Done.  New promotions are still in inbox so you can conveniently search for that
 1. Go to Tools -> Script Editor...
 1. Copy and paste the Code.gs text into the script. 
 1. Save it
-1. First run the **`initSheets`** function by selecting it in the "Select Fuction" dropdown and presssing the run button.
+1. Go back to the sheet and hit the refresh button.  After a few seconds, you will see a nice "Delay Purge" menu show up.
+1. Open that menu and select the "Setup Sheets" item.  This will add the sheets the script uses to track its important work and "Settings" sheet where you control its behavior.
 1. The script will ask for permission to run against your google account and the various data.  This script does not export the information anywhere or provide access to any other account.  It is completely limited to this script and your account.  Review the code and permissions if you have concerns.
-1. Go back to the sheet and open the Settings sheet.  Make sure the default "delete me label"
-matches the label you setup above.  Add an email if you want detailed, daily reports.
+1. The "Settings" sheet should be the curent active sheet, but if not, you and either select from the tabs at the botton of the screen, or use the "delay Purge -> Settings" menu to activate it.
+1. Make sure the default "delete me label" matches the label you setup above.  Add an email if you want detailed, daily reports.
 
 # Testing
+1. Open the script editor again.
 1. Select the **`cleanupTest`** function where it says "Select Fuction" and press the run button.
 1. Once the script has run, go back the sheet and select the "Data" sheet.  You will see a new row with today's date and some stats about the number of threads deleted.  If you see some other text, then something went wrong.  Check your setup to make sure it is OK.
 1. If the script ran properly, now you can schedule the actual cleanup task.  

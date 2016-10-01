@@ -3,11 +3,39 @@ var DetailsSheet = "Details";
 var DataSheet = "Data";
 
 //////////////////////////////////////////////////////////////////
-// Run this to setup the sheets
+//////////////////////////////////////////////////////////////////
+function onOpen() {
+  var ss = SpreadsheetApp.getActive();
+  
+  var isSettingsPreset = ss.getSheetByName(SettingsSheet) != null;
+  var isDataPreset = ss.getSheetByName(DataSheet) != null;
+  
+  var menuItems = [];
+  
+  if (ss.getSheetByName(SettingsSheet)) {
+    menuItems.push({name: 'Settings...', functionName: 'showSettings'})
+  }
+  if (!isSettingsPreset || !isDataPreset) {
+    menuItems.push({name: 'Setup Sheets', functionName: 'initSheets'});
+  }
+  
+  ss.addMenu('Delay Purge', menuItems);
+}
+
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+function showSettings() {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    SpreadsheetApp.setActiveSheet(ss.getSheetByName(SettingsSheet));
+}
+
+
+//////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
 function initSheets() {
   setupData();
   setupSettings();
+  onOpen();
 }
 
 //////////////////////////////////////////////////////////////////

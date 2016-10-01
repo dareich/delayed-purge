@@ -1,6 +1,7 @@
 var SettingsSheet = "Settings";
 var DetailsSheet = "Details";
 var DataSheet = "Data";
+var TestDataSheet = "TestData";
 
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
@@ -39,16 +40,19 @@ function initSheets() {
 }
 
 //////////////////////////////////////////////////////////////////
+// This create or finds a sheet of the specified name.  It returns
+// an object with the sheet and a bool that indicates if it was 
+// created.
 //////////////////////////////////////////////////////////////////
 function createSheet(sheetName) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getSheetByName(sheetName);
   
   if (!sheet) {
-    return ss.insertSheet(sheetName);  
+    return {sheet : ss.insertSheet(sheetName), created : true};  
   }
   
-  return null;
+  return {sheet : sheet, created : false};
 }
 
 //////////////////////////////////////////////////////////////////
@@ -58,15 +62,37 @@ function setupData() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getSheetByName("Sheet1");
   
-  if (!sheet) {
-    sheet = createSheet(DataSheet);
+  if (sheet) {
+      sheet.setName(DataSheet);
   } else {
-    sheet.setName(DataSheet);
+    var create = createSheet(DataSheet);
+    if (!create.created) {
+        return create.sheet;
+    } 
+    sheet = create.sheet;
+  } 
+  
+  fillDataSheet(sheet);
+  
+}
+
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+function setupTestData() {
+  
+  var create = createSheet(TestDataSheet);
+  
+  if (create.created) {
+    fillDataSheet(create.sheet);   
   }
   
-  if (!sheet) {
-    return;    
-  }
+  return create.sheet;
+  
+}
+
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+function fillDataSheet(sheet) {
   
   var headerValues = [
       ["Current Row", 4, "Points to the last non-blank row.  The script will update that row if it runs on the same day.  If the script runs on a different day, it will automatically move to the next row.","","",""],
@@ -130,12 +156,13 @@ function addTimeVsMessagesChart(sheet) {
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
 function setupSettings() {
-  var sheet = createSheet(SettingsSheet);
+  var create = createSheet(SettingsSheet);
   
-  if (!sheet) {
-    return;    
+  if (!create.created) {
+    return create.sheet;    
   }
-  
+  var sheet = create.sheet;
+    
   sheet.setColumnWidth(3,450);
   
   var values = [
@@ -164,17 +191,14 @@ function setupSettings() {
 
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
-function getCurrentRowCell() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName(DataSheet);
-  
+function getCurrentRowCell(sheet) {
   return sheet.getRange(1, 2);
 }
 
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
-function getCurrentRow() {
-  var nextRowVal = getCurrentRowCell().getValue();
+function getCurrentRow(sheet) {
+  var nextRowVal = getCurrentRowCell(sheet).getValue();
   
   if (!nextRowVal) {
     nextRowVal = 1;
@@ -185,8 +209,8 @@ function getCurrentRow() {
 
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
-function incrementNextRow() {
-  var cell = getCurrentRowCell();
+function incrementNextRow(sheet) {
+  var cell = getCurrentRowCell(sheet);
   
   cell.setValue(cell.getValue() + 1);
 }
@@ -234,9 +258,7 @@ function isRowToUse(today, range) {
 
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
-function writeInfo(info) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName(DataSheet);
+function writeInfo(info, sheet) {
 
   var d = new Date();
 
@@ -251,10 +273,10 @@ function writeInfo(info) {
   //   if the date matches today's date, then grab the current values and add them to the data passed
   //      in so that we accumulate the totals on a daily basis.
   //   if the date does not match, go to the next row until you find either a matching date or a blank.
-  var range = sheet.getRange(getCurrentRow());
+  var range = sheet.getRange(getCurrentRow(sheet));
   while (!isRowToUse(values[0][0], range)) {
-    incrementNextRow();
-    range = sheet.getRange(getCurrentRow());
+    incrementNextRow(sheet);
+    range = sheet.getRange(getCurrentRow(sheet));
   }
 
   // if the row is not blank, accumulate
@@ -275,9 +297,7 @@ function writeInfo(info) {
 
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
-function writeError(error) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName(DataSheet);
+function writeError(error, sheet) {
 
   var d = new Date();
 
@@ -286,10 +306,11 @@ function writeError(error) {
     [d.toDateString(), error, "", "", "", "Error"]
   ];
 
-  incrementNextRow();
-  var range = sheet.getRange(getCurrentRow());
+  incrementNextRow(sheet);
+  var range = sheet.getRange(getCurrentRow(sheet));
 
   range.setValues(values);
+  incrementNextRow(sheet);
   
 }
 
@@ -413,7 +434,7 @@ function sendDetailReport(reportAddress, details) {
 function cleanupTest() {
   cleanupMail(function(threadsToDelete) { 
     return threadsToDelete.length; 
-  });
+  }, setupTestData());
 
 }
 
@@ -421,21 +442,22 @@ function cleanupTest() {
 // This is the function to schedule daily.
 //////////////////////////////////////////////////////////////////
 function cleanup() {
+
   cleanupMail(function(threadsToDelete) { 
     GmailApp.moveThreadsToTrash(threadsToDelete);
     return threadsToDelete.length; 
-  });
+  }, setupData());
 }
 
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
-function cleanupMail(moveToTrash) {
-  setupData();
+function cleanupMail(moveToTrash, dataSheet) {
+
   var start = new Date();
   
   var delayDays = getDelay();
   if (!delayDays) {
-    writeError("Must specify a non-zero, non-blank number of days to delay the move the trash.");
+    writeError("Must specify a non-zero, non-blank number of days to delay the move the trash.", dataSheet);
     return;
   }
   
@@ -444,7 +466,7 @@ function cleanupMail(moveToTrash) {
     
   var label = GmailApp.getUserLabelByName(labelName);
   if (!label) {
-    writeError(Utilities.formatString("Could not find label '%s'", labelName));
+    writeError(Utilities.formatString("Could not find label '%s'", labelName), dataSheet);
     return;
   }
   
@@ -495,7 +517,7 @@ function cleanupMail(moveToTrash) {
   info.elapsed = (new Date()) - start;
   
   Logger.log(info);
-  writeInfo(info);
+  writeInfo(info, dataSheet);
   writeDetails(details.current);
   
   if (reportEmail && details.previous) {

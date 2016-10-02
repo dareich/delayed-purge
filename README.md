@@ -19,7 +19,7 @@ Done.  New promotions are still in inbox so you can conveniently search for that
 # Script Setup
 1. Create a blank Google Sheet
 1. Go to Tools -> Script Editor...
-1. Copy and paste the [Code.gs](Code.gs) text into the script. 
+1. Copy and paste the **[Code.gs](Code.gs)** text into the script. 
 1. Save it
 1. Go back to the sheet and hit the refresh button.  
 1. After a few seconds, you will see a nice **"Delay Purge"** menu show up.

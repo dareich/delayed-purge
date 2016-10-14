@@ -45,7 +45,11 @@ You can also run the script by selecting the "Purge Now" menu under **"Delay Pur
 If you don't want something purged, star the email and the script will not touch the thread.  You should also remove the "delete me" label to prevent the number of "starred" threads from building up. 
 
 ## Limitations
-The script gets a list of threads from the "delete me" label and then loops through the list backwards to find the oldest threads.  Google apps limits the number to 500 and the script does not do any additional passes.  Therefore, it is possible that not all the old emails are purged when the script runs.  If you see the total delayed threads sitting at 500 for a fiew days, then you might have to increase the frequency of the script running to keep up.
+The script gets a list of threads from the "delete me" label and then loops through the list backwards to delete the oldest threads.  
+Google apps limits the time the script can run to about 300 seconds.  If there are lot of emails to purge, the script may run out 
+of time and delete what it can.  If the script has trouble deleting everything you expect it to, either manually run the cleanup or
+increase the frequency.  Look at the time column to see if the script timed out.  If it is greater than about 260 seconds, then 
+you will need to run again.
 
 ## Error Display
 In case there are errors, once you have resolved them, be sure to delete the rows that have the error information.  When you do that, also be sure to edit the Current Row value on the Settings sheet to ensure that the inputs continue at the right place.

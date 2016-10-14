@@ -429,6 +429,33 @@ function sendDetailReport(reportAddress, details) {
 }
 
 //////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+function getThreads() {
+  var labelName = getDeleteMeLabel();
+    
+  var label = GmailApp.getUserLabelByName(labelName);
+  if (!label) {
+    writeError(Utilities.formatString("Could not find label '%s'", labelName), dataSheet);
+    return [];
+  }
+    
+  // Note, this will return a max of 500 threads.  
+  var threads = [];
+  var block = 0;
+  var blockSize = 500;
+  var readSize = 0;
+  
+  do {
+    var threadBlock = label.getThreads(block * blockSize, blockSize);
+    threads = threads.concat(threadBlock);
+    readSize = threadBlock.length;
+    block++;
+  } while(readSize == blockSize);
+  
+  return threads;
+}
+
+//////////////////////////////////////////////////////////////////
 // Execute this function to make sure the settings are correct.
 // It does not actually move anything to trash, but it counts and 
 // reports as if it does.  You can see the entries in the sheet.
@@ -464,19 +491,12 @@ function cleanupMail(moveToTrash, dataSheet) {
   }
   
   var reportEmail = getReportEmail();
-  var labelName = getDeleteMeLabel();
     
-  var label = GmailApp.getUserLabelByName(labelName);
-  if (!label) {
-    writeError(Utilities.formatString("Could not find label '%s'", labelName), dataSheet);
-    return;
-  }
-  
   var maxDate = new Date();
   maxDate.setDate(maxDate.getDate() - delayDays);
   
   // Note, this will return a max of 500 threads.  
-  var threads = label.getThreads();
+  var threads = getThreads();
  
   var details = initDetails();
   

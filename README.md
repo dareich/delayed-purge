@@ -25,7 +25,7 @@ Done.  New promotions are still in inbox so you can conveniently search for that
 1. After a few seconds, you will see a nice **"Delay Purge"** menu show up.
 1. Open that menu and select the "Setup Sheets" item.  This will add the sheets the script uses to track its important work and "Settings" sheet where you control its behavior.
 1. The script will ask for permission to run against your google account and the various data.  This script does not export the information anywhere or provide access to any other account.  It is completely limited to this script and your account.  Review the code and permissions if you have concerns.
-1. The "Settings" sheet should be the curent active sheet, but if not, you and either select from the tabs at the botton of the screen, or use the "delay Purge -> Settings" menu to activate it.
+1. The "Settings" sheet should be the curent active sheet, but if not, you can either select from the tabs at the botton of the screen, or use the "delay Purge -> Settings" menu to activate it.
 1. Make sure the default "delete me label" matches the label you setup above.  Add an email if you want detailed, daily reports.
 
 # Testing and Scheduling
@@ -45,11 +45,7 @@ You can also run the script by selecting the "Purge Now" menu under **"Delay Pur
 If you don't want something purged, star the email and the script will not touch the thread.  You should also remove the "delete me" label to prevent the number of "starred" threads from building up. 
 
 ## Limitations
-The script gets a list of threads from the "delete me" label and then loops through the list backwards to delete the oldest threads.  
-Google apps limits the time the script can run to about 300 seconds.  If there are lot of emails to purge, the script may run out 
-of time and delete what it can.  If the script has trouble deleting everything you expect it to, either manually run the cleanup or
-increase the frequency.  Look at the time column to see if the script timed out.  If it is greater than about 260 seconds, then 
-you will need to run again.
+The script gets a list of threads from the "delete me" label and then loops through the list backwards to delete the oldest threads. Google apps limits the time the script can run to about 300 seconds.  If there are lot of emails to purge, the script may run out of time and delete what it can.  If the script has trouble deleting everything you expect it to, either manually run the cleanup or increase the frequency.  Look at the time column to see if the script timed out.  If it is greater than about 260 seconds, then you will need to run again.
 
 ## Error Display
 In case there are errors, once you have resolved them, be sure to delete the rows that have the error information.  When you do that, also be sure to edit the Current Row value on the Settings sheet to ensure that the inputs continue at the right place.

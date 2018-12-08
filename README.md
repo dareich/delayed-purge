@@ -11,29 +11,38 @@ Add this script to a google spreadsheet to move emails in your GMail from a "del
 For data/dashboard geeks, the script logs the number of threads and messages removed right in the spreadsheet and the data is displayed in a nice chart.  You can see how much crap the script is purging on a daily basis.  There is also a correlation showing the time to delete vs. the number of threads.  Total Shiggles.
 
 # Email Setup
-1. Create a new label called "delete me" or anything else you want.  It can even be a sub label under "Admin Stuff"
-1. Start creating filters to catch and label the stuff you want to delay purge.  Be sure to "apply filter" before saving the new filter to tag all the old emails.
+1. [Create a new label](https://youtu.be/wxSFzN7aWMk) called "delete me" or anything else you want.  It can even be a sub label under "Admin Stuff"
+1. Start [creating filters](https://youtu.be/ERGts28o_2I) to catch and label the stuff you want to delay purge.  Be sure to "apply filter" before saving the new filter to tag all the old emails.
 
 Done.  New promotions are still in inbox so you can conveniently search for that "shutterfly deal I just saw a few days ago".
 
 # Script Setup
-1. Create a blank Google Sheet
-1. Go to Tools -> Script Editor...
-1. Copy and paste the **[Code.gs](Code.gs)** text into the script. 
-1. Save it
+1. Copy the text from here: **[Code.gs](Code.gs)**. (Click the link and select the text in the edit window with the line numbers - the numbers don't get copied. Be sure to select all the text)
+1. [Create a blank Google Sheet](https://youtu.be/cPWcf9dqhnI). Name it whatever makes sense for you, like "Delay Email Purge".
+1. Click on the menu **Tools -> Script Editor**...
+1. Select all the text in the script window (eg. function myFunction...) and then **Paste** the code you copied earlier.
+1. Save it (name it whatever - the same as the sheet works)
 1. Go back to the sheet and hit the refresh button.  
-1. After a few seconds, you will see a nice **"Delay Purge"** menu show up.
-1. Open that menu and select the "Setup Sheets" item.  This will add the sheets the script uses to track its important work and "Settings" sheet where you control its behavior.
+1. After a few seconds, you will see a nice **"Delay Purge"** menu show up - probably next to the **"Help"** menu.
+1. Open that menu and select the **"Setup Sheets"** item.  This will add the sheets the script uses to track its important work and "Settings" sheet where you control its behavior.
 1. The script will ask for permission to run against your google account and the various data.  This script does not export the information anywhere or provide access to any other account.  It is completely limited to this script and your account.  Review the code and permissions if you have concerns.
-1. The "Settings" sheet should be the curent active sheet, but if not, you can either select from the tabs at the botton of the screen, or use the "delay Purge -> Settings" menu to activate it.
-1. Make sure the default "delete me label" matches the label you setup above.  Add an email if you want detailed, daily reports.
+1. The "Settings" sheet should be the curent active sheet, but if not, you can either select from the tabs at the botton of the screen, or use the **"Delay Purge -> Settings"** menu to activate it.
+1. Make sure the default "delete me label" matches the label you setup above.
+1. Add an email if you want detailed, daily reports on what the script is moving to trash. You will probably want to filter this email too.
 
 # Testing and Scheduling
-1. Under the **"Delay Purge"** menu select "Test"
-1. Once the script has run, select the "TestData" sheet.  You will see a new row with today's date and some stats about the number of threads deleted.  If you see some other text, then something went wrong.  Check your setup to make sure it is OK.
-1. If the script ran properly, now you can schedule the actual cleanup task. *Feel free to delete the "TestData" sheet.*
-1. In the script editor, click the little clock icon or choose Resources -> Current project's triggers menu item.  
- - In the dialog, add a new trigger to run **`cleanup`** and select whatever time based trigger you want. 
+1. Under the **"Delay Purge"** menu select **"Test"**
+1. Once the script has run, select the "TestData" sheet.  You will see a new row with today's date and some stats about the number of threads deleted (moved to trash).  If you see some other text, then something went wrong (like maybe the label name if misspelled).  Check your setup to make sure it is OK.
+   - *Feel free to delete the "TestData" sheet.*
+1. If the script ran properly, now you can schedule the actual cleanup task. 
+1. In the script editor, click the little clock icon or choose **Edit -> Current project's triggers** menu item.  
+   - This will open a new tab showing a fancy page where you add and edit triggers on the project.
+   - Click the **Add Trigger** button in the bottom right pof the screen.
+   - In the dialog that opens:
+     - *Choose which function to run*: select **`cleanup`**
+     - *Select event source*: select **Time-Driven**
+     - *Select type of time based trigger*: **Day Timer** or whatever makes sense for you.
+     - *Select time of daya*: usually midnight to 1am is good.
 
 Running the script daily should be sufficient to keep your junk down, but you can run this as many times per day as you want. The stats accumulate on the single line for the day, so running the script often does not spam the data table.
 

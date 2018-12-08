@@ -430,7 +430,7 @@ function sendDetailReport(reportAddress, details) {
 
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
-function getThreads() {
+function getThreads(dataSheet) {
   var labelName = getDeleteMeLabel();
     
   var label = GmailApp.getUserLabelByName(labelName);
@@ -496,7 +496,7 @@ function cleanupMail(moveToTrash, dataSheet) {
   maxDate.setDate(maxDate.getDate() - delayDays);
   
   // Note, this will return a max of 500 threads.  
-  var threads = getThreads();
+  var threads = getThreads(dataSheet);
  
   var details = initDetails();
   
